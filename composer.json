@@ -1,0 +1,21 @@
+{
+    "name": "otgs/remote-files-cache",
+    "description": "A WP library for caching remote files",
+    "type": "library",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "OnTheGoSystems",
+            "email": "hello@wpml.org"
+        }
+    ],
+    "autoload": {
+        "classmap": [
+            "src/"
+        ]
+    },
+    "require-dev": {
+        "otgs/unit-tests-framework": "~1.2.0",
+        "sebastian/phpcpd": "^3.0"
+    }
+}
