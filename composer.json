@@ -32,5 +32,13 @@
         "dealerdirect/phpcodesniffer-composer-installer": "*",
 
         "wp-coding-standards/wpcs": "^0"
+    },
+    "scripts": {
+        "make": [
+            "make githooks"
+        ],
+         "post-install-cmd": [
+            "@make"
+        ]
     }
 }
