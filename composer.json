@@ -5,6 +5,11 @@
     "license": "GPL-3.0-or-later",
     "authors": [
         {
+            "email": "adriano.f@onthegosystems.com",
+            "name": "Adriano Ferreira",
+            "homepage": "http://www.wpml.org"
+        },
+        {
             "name": "OnTheGoSystems",
             "email": "hello@wpml.org"
         }

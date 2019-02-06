@@ -2,6 +2,10 @@
 
 A WP library for caching remote files. It caches the hash of the remote file in WP options table, avoiding multiple remote requests on the same file if the local file is up to date, saving bandwidth. It is done through a tiny HEAD request.
 
+# Installation
+
+`composer require otgs/remote-files-cache`
+
 ## Usage
 
 Checking if the cached file is up to date:
