@@ -19,6 +19,8 @@
             "src/"
         ]
     },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "require-dev": {
         "otgs/unit-tests-framework": "~1.2.0",
         "sebastian/phpcpd": "^3.0"
