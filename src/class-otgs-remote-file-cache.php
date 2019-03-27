@@ -2,13 +2,21 @@
 
 class OTGS_Remote_File_Cache {
 
-	const OPTION_KEY_PREFIX = '_otgs_remote_file_hash_';
+	const OPTION_KEY_PREFIX = 'otgs_remote_file_hash';
 
 	private $file_url;
+	private $option_key_name;
 	private $remote_hash;
 
-	public function __construct( $file_url ) {
+	/**
+	 * OTGS_Remote_File_Cache constructor.
+	 *
+	 * @param string $file_url
+	 * @param string $option_key_name
+	 */
+	public function __construct( $file_url, $option_key_name ) {
 		$this->file_url = $file_url;
+		$this->option_key_name = $option_key_name;
 	}
 
 	/**
@@ -56,6 +64,11 @@ class OTGS_Remote_File_Cache {
 	 * @return string
 	 */
 	private function get_option_name() {
-		return self::OPTION_KEY_PREFIX . md5( $this->file_url );
+		return sprintf(
+			'%s_%s_%s',
+			self::OPTION_KEY_PREFIX,
+			$this->option_key_name,
+			md5( $this->file_url )
+		);
 	}
 }

@@ -12,12 +12,13 @@ class Test_OTGS_Remote_File_Cache extends OTGS_TestCase {
 	 */
 	public function it_should_return_false_if_remote_file_hash_could_not_be_achieved() {
 		$remote_url = 'http://something.com/products.json';
-		$subject    = new OTGS_Remote_File_Cache( $remote_url );
+		$option_key_name = 'option_key_name';
+		$subject    = new OTGS_Remote_File_Cache( $remote_url, $option_key_name );
 
 		$response = 'WP_Error';
 
 		\WP_Mock::userFunction( 'get_option', array(
-			'args'   => OTGS_Remote_File_Cache::OPTION_KEY_PREFIX . md5( $remote_url ),
+			'args'   => OTGS_Remote_File_Cache::OPTION_KEY_PREFIX . '_' . $option_key_name . '_' . md5( $remote_url ),
 			'return' => 'local-hash',
 		) );
 
@@ -38,7 +39,8 @@ class Test_OTGS_Remote_File_Cache extends OTGS_TestCase {
 	 */
 	public function it_should_return_false_and_cache_the_current_etag_if_remote_file_hash_is_different_than_the_local_one() {
 		$remote_url = 'http://something.com/products.json';
-		$subject    = new OTGS_Remote_File_Cache( $remote_url );
+		$option_key_name = 'option_key_name';
+		$subject    = new OTGS_Remote_File_Cache( $remote_url, $option_key_name );
 		$hash       = '"some-etag-hash"';
 
 		$response = array(
@@ -57,7 +59,7 @@ class Test_OTGS_Remote_File_Cache extends OTGS_TestCase {
 		) );
 
 		\WP_Mock::userFunction( 'get_option', array(
-			'args'   => OTGS_Remote_File_Cache::OPTION_KEY_PREFIX . md5( $remote_url ),
+			'args'   => OTGS_Remote_File_Cache::OPTION_KEY_PREFIX . '_' . $option_key_name . '_' . md5( $remote_url ),
 			'return' => 'some-old-hash',
 		) );
 
@@ -69,7 +71,8 @@ class Test_OTGS_Remote_File_Cache extends OTGS_TestCase {
 	 */
 	public function it_should_return_false_and_cache_the_current_last_modified_hash_when_etag_is_not_found_when_remote_file_hash_is_different_than_the_local_one() {
 		$remote_url = 'http://something.com/products.json';
-		$subject    = new OTGS_Remote_File_Cache( $remote_url );
+		$option_key_name = 'option_key_name';
+		$subject    = new OTGS_Remote_File_Cache( $remote_url, $option_key_name );
 		$last_modified_date = 'Mon Jan 17th';
 
 		$response = array(
@@ -88,7 +91,7 @@ class Test_OTGS_Remote_File_Cache extends OTGS_TestCase {
 		) );
 
 		\WP_Mock::userFunction( 'get_option', array(
-			'args'   => OTGS_Remote_File_Cache::OPTION_KEY_PREFIX . md5( $remote_url ),
+			'args'   => OTGS_Remote_File_Cache::OPTION_KEY_PREFIX . '_' . $option_key_name . '_' . md5( $remote_url ),
 			'return' => 'some-old-hash',
 		) );
 
@@ -100,7 +103,8 @@ class Test_OTGS_Remote_File_Cache extends OTGS_TestCase {
 	 */
 	public function it_should_update_file_cache_with_remote_etag_when_found() {
 		$remote_url = 'http://something.com/products.json';
-		$subject    = new OTGS_Remote_File_Cache( $remote_url );
+		$option_key_name = 'option_key_name';
+		$subject    = new OTGS_Remote_File_Cache( $remote_url, $option_key_name );
 		$new_hash = 'new-hash';
 
 		$response = array(
@@ -119,12 +123,14 @@ class Test_OTGS_Remote_File_Cache extends OTGS_TestCase {
 		) );
 
 		\WP_Mock::userFunction( 'get_option', array(
-			'args'   => OTGS_Remote_File_Cache::OPTION_KEY_PREFIX . md5( $remote_url ),
+			'args'   => OTGS_Remote_File_Cache::OPTION_KEY_PREFIX . '_' . $option_key_name . '_' . md5( $remote_url ),
 			'return' => 'some-old-hash',
 		) );
 
 		\WP_Mock::userFunction( 'update_option', array(
-			'args'   => array( OTGS_Remote_File_Cache::OPTION_KEY_PREFIX . md5( $remote_url ), $new_hash ),
+			'args'   => array(
+				OTGS_Remote_File_Cache::OPTION_KEY_PREFIX . '_' . $option_key_name . '_' . md5( $remote_url ), $new_hash
+			),
 			'times'  => 1,
 		) );
 
@@ -136,7 +142,8 @@ class Test_OTGS_Remote_File_Cache extends OTGS_TestCase {
 	 */
 	public function it_should_update_file_cache_with_remote_last_modified_date_when_etag_is_not_found() {
 		$remote_url = 'http://something.com/products.json';
-		$subject    = new OTGS_Remote_File_Cache( $remote_url );
+		$option_key_name = 'option_key_name';
+		$subject    = new OTGS_Remote_File_Cache( $remote_url, $option_key_name );
 		$last_modified_date = 'Mon Jan 17th';
 
 		$response = array(
@@ -155,12 +162,15 @@ class Test_OTGS_Remote_File_Cache extends OTGS_TestCase {
 		) );
 
 		\WP_Mock::userFunction( 'get_option', array(
-			'args'   => OTGS_Remote_File_Cache::OPTION_KEY_PREFIX . md5( $remote_url ),
+			'args'   => OTGS_Remote_File_Cache::OPTION_KEY_PREFIX . '_' . $option_key_name . '_' . md5( $remote_url ),
 			'return' => 'some-old-hash',
 		) );
 
 		\WP_Mock::userFunction( 'update_option', array(
-			'args'   => array( OTGS_Remote_File_Cache::OPTION_KEY_PREFIX . md5( $remote_url ), md5( $last_modified_date ) ),
+			'args'   => array(
+				OTGS_Remote_File_Cache::OPTION_KEY_PREFIX . '_' . $option_key_name . '_' . md5( $remote_url ),
+				md5( $last_modified_date )
+			),
 			'times'  => 1,
 		) );
 
@@ -172,7 +182,8 @@ class Test_OTGS_Remote_File_Cache extends OTGS_TestCase {
 	 */
 	public function it_should_return_true_and_cache_the_current_file_for_the_request_if_the_remote_file_hash_is_equal_than_the_local_one() {
 		$remote_url = 'http://something.com/products.json';
-		$subject    = new OTGS_Remote_File_Cache( $remote_url );
+		$option_key_name = 'option_key_name';
+		$subject    = new OTGS_Remote_File_Cache( $remote_url, $option_key_name );
 		$hash       = '"some-etag-hash"';
 
 		$response = array(
@@ -191,7 +202,7 @@ class Test_OTGS_Remote_File_Cache extends OTGS_TestCase {
 		) );
 
 		\WP_Mock::userFunction( 'get_option', array(
-			'args'   => OTGS_Remote_File_Cache::OPTION_KEY_PREFIX . md5( $remote_url ),
+			'args'   => OTGS_Remote_File_Cache::OPTION_KEY_PREFIX . '_' . $option_key_name . '_' . md5( $remote_url ),
 			'return' => 'some-etag-hash',
 		) );
 
