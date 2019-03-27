@@ -15,8 +15,8 @@ class OTGS_Remote_File_Cache {
 	 * @param string $option_key_name
 	 */
 	public function __construct( $file_url, $option_key_name ) {
-		$this->file_url = $file_url;
-		$this->option_key_name = $option_key_name;
+		$this->file_url        = $this->guard_file_url( $file_url );
+		$this->option_key_name = $this->guard_option_key_name( $option_key_name );
 	}
 
 	/**
@@ -24,6 +24,32 @@ class OTGS_Remote_File_Cache {
 	 */
 	public function is_up_to_date() {
 		return $this->get_remote_hash() === $this->get();
+	}
+
+	/**
+	 * @param mixed $option_key_name
+	 *
+	 * @return string
+	 */
+	private function guard_option_key_name( $option_key_name ) {
+		if ( is_string( $option_key_name ) ) {
+			return sanitize_key( $option_key_name );
+		}
+
+		throw new InvalidArgumentException( 'Invalid option_key_name parameter: It should be a string.' );
+	}
+
+	/**
+	 * @param mixed $file_url
+	 *
+	 * @return string
+	 */
+	private function guard_file_url( $file_url ) {
+		if ( is_string( $file_url ) ) {
+			return esc_url( $file_url );
+		}
+
+		throw new InvalidArgumentException( 'Invalid file_url parameter: It should be a string.' );
 	}
 
 	/**
